@@ -18,5 +18,5 @@ static inline uint64_t floor_log2(uint64_t x) {
 #include <cstdio>
 
 int main() {
-    
+
 }

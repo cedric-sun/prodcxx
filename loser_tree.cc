@@ -2,33 +2,38 @@
 
 // ALL HAIL SAHNI!
 #include <vector>
-#include <cstdint>
 #include <cstring>
-
-#include <cstdio>
 
 using std::vector;
 
+#ifdef __LOCAL_RUN__
+struct ListNode {
+    int val;
+    ListNode *next;
+
+    ListNode() : val(0), next(nullptr) {}
+
+    ListNode(int x) : val(x), next(nullptr) {}
+
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+#endif
+
 struct loser_tree {
     const int n;
-    int *tree;
-    int *idx;
-    const vector<vector<int>> &tt_lists;
+    int *const tree;
+
+    vector<const ListNode *> &vec;
 
     // PRECONDITION: t_lists.size()>=1 && t_lists[x].size()>=1 for all x
-    loser_tree(const vector<vector<int>> &t_lists)
-            : n(t_lists.size()), tree(new int[n]), tt_lists(t_lists), idx(new int[n]) {
-        memset(idx, 0, sizeof(*idx) * n);
+    loser_tree(vector<const ListNode *> &vvec) : n(vvec.size()), tree(new int[n]), vec(vvec) {
         tree[0] = init(1);
     }
 
     int init(int i) {// i index into tree
-        if (i >= n) {
-            return i - n; // index into tt_lists
-        }
-        // index of left winner and right winner
+        if (i >= n) return i - n;
         int li = init(i << 1), ri = init((i << 1) + 1);
-        if (tt_lists[li][0] > tt_lists[ri][0]) {
+        if (vec[li]->val > vec[ri]->val) {
             tree[i] = li;
             return ri;
         } else {
@@ -41,12 +46,12 @@ struct loser_tree {
 
     inline void upfloat(int i) {
         int parent = (i + n) >> 1;
-        if (idx[i] >= tt_lists[i].size()) {
+        if (vec[i] == nullptr) {
             i = IALOSE;
         }
         while (parent > 0) {
             const int j = tree[parent];
-            if (j != IALOSE && (i == IALOSE || tt_lists[i][idx[i]] > tt_lists[j][idx[j]]))
+            if (j != IALOSE && (i == IALOSE || vec[i]->val > vec[j]->val))
                 std::swap(tree[parent], i);
             parent >>= 1;
         }
@@ -55,8 +60,8 @@ struct loser_tree {
 
     int next() {
         const int i = tree[0]; // champion queue index
-        int ret = tt_lists[i][idx[i]];
-        idx[i]++;
+        int ret = vec[i]->val;
+        vec[i] = vec[i]->next;
         upfloat(i);
         return ret;
     }
@@ -67,48 +72,26 @@ struct loser_tree {
 
     virtual ~loser_tree() {
         delete[] tree;
-        delete[] idx;
     }
 };
 
 //unit test: https://leetcode.com/problems/merge-k-sorted-lists/
 
-/**
- * Definition for singly-linked list.*/
-//struct ListNode {
-//    int val;
-//    ListNode *next;
-//
-//    ListNode() : val(0), next(nullptr) {}
-//
-//    ListNode(int x) : val(x), next(nullptr) {}
-//
-//    ListNode(int x, ListNode *next) : val(x), next(next) {}
-//};
 
 class Solution {
 public:
-    ListNode *mergeKLists(const vector<ListNode *> &lists) {
-        if (lists.empty()) {
-            return nullptr;
-        }
-        vector<vector<int>> bkb;
-        vector<int> tmp;
-        for (const ListNode *p : lists) {
-            tmp.clear();
-            while (p != nullptr) {
-                tmp.push_back(p->val);
-                p = p->next;
-            }
-            if (!tmp.empty()) {
-                bkb.push_back(std::move(tmp));
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        if (lists.empty()) return nullptr;
+        vector<const ListNode *> sanitized;
+        sanitized.reserve(lists.size());
+        for (const ListNode *const &x : lists) {
+            if (x != nullptr) {
+                sanitized.push_back(x);
             }
         }
-        if (bkb.empty()) {
-            return nullptr;
-        }
-        loser_tree loser{bkb};
+        if (sanitized.empty()) return nullptr;
 
+        loser_tree loser{sanitized};
         ListNode tmp_head;
         ListNode *cur = &tmp_head;
         while (loser.has_next()) {
@@ -131,7 +114,7 @@ ListNode *make_stupid_linkedlist(vector<int> vec) {
     return tmp_head.next;
 }
 
-void free_stupid_linkedlist(ListNode *head) {
+void free_stupid_linkedlist(const ListNode *head) {
     while (head != nullptr) {
         ListNode *tmp = head->next;
         delete head;
@@ -158,7 +141,7 @@ int main() {
     ListNode *ans = x.mergeKLists(data);
     print_stupid_linkedlist(ans);
     free_stupid_linkedlist(ans);
-    for (ListNode *const p : data) {
+    for (const ListNode *const p : data) {
         free_stupid_linkedlist(p);
     }
 }
