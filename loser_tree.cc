@@ -1,39 +1,24 @@
 // cesun, 9/8/20 4:28 PM.
 
-// ALL HAIL SAHNI!
 #include <vector>
-#include <cstring>
 
 using std::vector;
 
-#ifdef __LOCAL_RUN__
-struct ListNode {
-    int val;
-    ListNode *next;
-
-    ListNode() : val(0), next(nullptr) {}
-
-    ListNode(int x) : val(x), next(nullptr) {}
-
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-};
-#endif
-
+template<typename T>
 struct loser_tree {
     const int n;
     int *const tree;
-
-    vector<const ListNode *> &vec;
+    T *qs;
 
     // PRECONDITION: t_lists.size()>=1 && t_lists[x].size()>=1 for all x
-    loser_tree(vector<const ListNode *> &vvec) : n(vvec.size()), tree(new int[n]), vec(vvec) {
+    loser_tree(T *qs, const int n) : n(n), tree(new int[n]), qs(qs) {
         tree[0] = init(1);
     }
 
     int init(int i) {// i index into tree
         if (i >= n) return i - n;
         int li = init(i << 1), ri = init((i << 1) + 1);
-        if (vec[li]->val > vec[ri]->val) {
+        if (qs[li] > qs[ri]) {
             tree[i] = li;
             return ri;
         } else {
@@ -46,12 +31,10 @@ struct loser_tree {
 
     inline void upfloat(int i) {
         int parent = (i + n) >> 1;
-        if (vec[i] == nullptr) {
-            i = IALOSE;
-        }
+        if (qs[i].invalid()) i = IALOSE;
         while (parent > 0) {
             const int j = tree[parent];
-            if (j != IALOSE && (i == IALOSE || vec[i]->val > vec[j]->val))
+            if (j != IALOSE && (i == IALOSE || qs[i] > qs[j]))
                 std::swap(tree[parent], i);
             parent >>= 1;
         }
@@ -60,8 +43,8 @@ struct loser_tree {
 
     int next() {
         const int i = tree[0]; // champion queue index
-        int ret = vec[i]->val;
-        vec[i] = vec[i]->next;
+        int ret = qs[i].value();
+        qs[i].next();
         upfloat(i);
         return ret;
     }
@@ -76,22 +59,46 @@ struct loser_tree {
 };
 
 //unit test: https://leetcode.com/problems/merge-k-sorted-lists/
+#ifdef __LOCAL_RUN__
 
+#include "misc/listnode.h"
+
+#endif
+
+struct ListNodeWrapper {
+    ListNode *p;
+
+    explicit ListNodeWrapper(ListNode *p) : p(p) {}
+
+    bool operator>(const ListNodeWrapper &o) {
+        return p->val > o.p->val;
+    }
+
+    bool invalid() {
+        return p == nullptr;
+    }
+
+    void next() {
+        p = p->next;
+    }
+
+    int value() {
+        return p->val;
+    }
+};
 
 class Solution {
 public:
     ListNode *mergeKLists(vector<ListNode *> &lists) {
         if (lists.empty()) return nullptr;
-        vector<const ListNode *> sanitized;
+        vector<ListNodeWrapper> sanitized;
         sanitized.reserve(lists.size());
-        for (const ListNode *const &x : lists) {
-            if (x != nullptr) {
-                sanitized.push_back(x);
-            }
-        }
+        for (ListNode *x : lists)
+            if (x != nullptr)
+                sanitized.emplace_back(x);
         if (sanitized.empty()) return nullptr;
 
-        loser_tree loser{sanitized};
+        loser_tree loser{sanitized.data(), static_cast<int>(sanitized.size())};
         ListNode tmp_head;
         ListNode *cur = &tmp_head;
         while (loser.has_next()) {
