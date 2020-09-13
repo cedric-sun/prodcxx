@@ -1,5 +1,19 @@
 // cesun, 9/8/20 4:28 PM.
 
+/**
+ * TODO: formalize type T to be a pair of iterator and its cend.
+ */
+
+/**
+ *          plot twist: loser tree is heap keyed on the head of each queue.
+ *                  you pop the top of the heap, if
+ *                      1. the popped queue has more elements, you replace top with that next element and sift down
+ *                      2. the popped queue has no more element, you sift up the last queue in the heap array.
+ *                  even just using the priority_queue from stl is not too bad, you just pop and push again
+ *                      which is just a constant factor slower.
+ *          min fibonacci heap could decrease key in O(1), but after we pop the top,
+ *                 we need to increase key.
+*/
 #include <vector>
 
 using std::vector;
@@ -8,17 +22,17 @@ template<typename T>
 struct loser_tree {
     const int n;
     int *const tree;
-    T *qs;
+    vector<T> &vec;
 
     // PRECONDITION: t_lists.size()>=1 && t_lists[x].size()>=1 for all x
-    loser_tree(T *qs, const int n) : n(n), tree(new int[n]), qs(qs) {
+    loser_tree(vector<T> &vvec) : n(vvec.size()), tree(new int[n]), vec(vvec) {
         tree[0] = init(1);
     }
 
     int init(int i) {// i index into tree
         if (i >= n) return i - n;
         int li = init(i << 1), ri = init((i << 1) + 1);
-        if (qs[li] > qs[ri]) {
+        if (vec[li] > vec[ri]) {
             tree[i] = li;
             return ri;
         } else {
@@ -31,10 +45,10 @@ struct loser_tree {
 
     inline void upfloat(int i) {
         int parent = (i + n) >> 1;
-        if (qs[i].invalid()) i = IALOSE;
+        if (vec[i].invalid()) i = IALOSE;
         while (parent > 0) {
             const int j = tree[parent];
-            if (j != IALOSE && (i == IALOSE || qs[i] > qs[j]))
+            if (j != IALOSE && (i == IALOSE || vec[i] > vec[j]))
                 std::swap(tree[parent], i);
             parent >>= 1;
         }
@@ -43,8 +57,8 @@ struct loser_tree {
 
     int next() {
         const int i = tree[0]; // champion queue index
-        int ret = qs[i].value();
-        qs[i].next();
+        int ret = vec[i].value();
+        vec[i].next();
         upfloat(i);
         return ret;
     }
@@ -98,7 +112,7 @@ public:
                 sanitized.emplace_back(x);
         if (sanitized.empty()) return nullptr;
 
-        loser_tree loser{sanitized.data(), static_cast<int>(sanitized.size())};
+        loser_tree loser{sanitized};
         ListNode tmp_head;
         ListNode *cur = &tmp_head;
         while (loser.has_next()) {

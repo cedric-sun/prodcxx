@@ -1,12 +1,8 @@
 // cesun, 9/7/20 1:07 AM.
 
 #include <algorithm>
-#include <cstdint>
 
-// UB when x=0
-static inline uint64_t floor_log2(uint64_t x) {
-    return 63U - __builtin_clzl(x);
-}
+#include "bitmagic.cc"
 
 // preprocess O( n log(n) ), query O(1)
 struct rmq_sparse_table {

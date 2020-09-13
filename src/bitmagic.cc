@@ -13,10 +13,3 @@ static inline uint64_t ceil_log2(uint64_t x) {
 static inline uint64_t floor_log2(uint64_t x) {
     return 63U - __builtin_clzl(x);
 }
-
-
-#include <cstdio>
-
-int main() {
-
-}

@@ -5,9 +5,10 @@
 // merge by size, path compression, memset init
 struct disjoint_set {
     int *const arr;
+    int n_set; // number of separated sets;
 
     // index is [0,n)
-    disjoint_set(const int n) : arr(new int[n]) {
+    disjoint_set(const int n) : arr(new int[n]),n_set(n) {
         memset(arr, -1, sizeof(*arr) * n);
     }
 
@@ -31,6 +32,7 @@ struct disjoint_set {
             arr[b] += arr[a];
             arr[a] = b;
         }
+        --n_set;
     }
 
     void join(const int x, const int y) {
@@ -61,8 +63,7 @@ public:
                 return false;
             }
             ds.join_leader(a, b);
-            n--;
         }
-        return n == 1;
+        return ds.n_set == 1;
     }
 };
