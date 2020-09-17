@@ -3,6 +3,7 @@
 namespace iqsort {
     static int *arrr;
 
+    // upper bound to minimize number of elements need to be moved.
     // search [l,r)
     static inline int upper_bound(int l, int r, const int k) {
         while (l < r) {
@@ -26,6 +27,7 @@ namespace iqsort {
         }
     }
 
+    //TODO: non-recursive (and maybe parallel)
     static void _qsort(int l, int r) {
         if (l < r) {
             if (r - l < 16) {
@@ -64,6 +66,8 @@ using std::vector;
 #define TST_SIZE 5000
 #define TST_N 15
 using TestArrayT = std::array<int, TST_SIZE>;
+
+// std::sort can work on c-style raw array though ...
 
 bool test_insertion_sort(TestArrayT &data) {
     //todo forward? when is this unique_ptr dereferenced?
