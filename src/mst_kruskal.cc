@@ -6,18 +6,7 @@
 
 // unit test: http://acm.hdu.edu.cn/showproblem.php?pid=1233
 
-//#include <stdio_ext.h>
-#include <iostream>
-#include <algorithm>
-
-void fast_io() {
-    using namespace std;
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-//    __fsetlocking(stdin, FSETLOCKING_BYCALLER);
-//    __fsetlocking(stdout, FSETLOCKING_BYCALLER);
-}
+#include "util.cc"
 
 #include <cstdint>
 #include <queue>
@@ -31,6 +20,7 @@ struct edge {
     }
 };
 
+#include <cstdio>
 int main() {
     fast_io();
     while (true) {
