@@ -1,0 +1,38 @@
+When d[] stores T directly
+============================
+https://cp-algorithms.com/sequences/longest_increasing_subsequence.html
+    The condition check is necessary for the non-binary-search version,
+    but is silly for the binary search version.
+    They should use lower_bound and not a single check needed
+    upper_bound guarantees:     d[j] > a[i]  and  d[j-1] <= a[i]
+                                                          ^
+                                               notice this possible equality here
+    the possibility of equality is problematic, you may now having duplicated
+    element in d;
+
+    lower_bound guarantees:     d[j] >= a[i]  and  d[j-1] < a[i]
+                                                          ^
+                                                      CRITICAL!
+    The guarantee of inequality between d[j-1] and a[i] is critical. This ensures
+    us that we don't need to do safe check anymore. For `d[j] >= a[i]`, it's okay
+    when the equality happens, where we will replace the same value with the same
+    value.
+
+https://oi-wiki.org/dp/basic/#_12
+    this implementation is interesting but also extremely limited.
+    Might only work for T=int, if you set d to be a `long` array.
+
+When d[] stores index into a
+================================
+About invalid value
+    Whenever you need a value to represent a "invalid T" for any type T, it's better to
+    switch to store the index or pointer, rather than store T directly. You can't afford
+    the expenditure of move some potential large data chunk T around.
+
+For a generic lis algorithm, store the index.
+    no easy way of initialization when you store index in d, cause you
+    can't rely on the lower_bound to do all the work for you. You need
+    to maintain the left and right boundary of binary search, and you
+    want the search range to be small so that the times of indirecting a index
+    into the array a is minimized.
+    (i.e. can't be lower_bound on the whole [0,n) now.)
