@@ -6,8 +6,7 @@
 #define MAXN 10005
 
 template<typename T>
-struct slis {
-
+struct lis {
     // [0,r)
     static inline int lower_bound(const T *const a, const int *const d, int r, const T &key) {
         int l = 0;
@@ -38,62 +37,10 @@ struct slis {
 //            if (j == dsz) dsz++;
 //            d[j] = i;
         }
-        int ans = d[dsz - 1];
         delete[] d;
-        return ans;
+        return dsz;
     }
 };
-
-struct Envelope {
-    int w, h;
-
-    bool operator<(const Envelope &rhs) const {
-        return w < rhs.w && h < rhs.h;
-    }
-
-    bool operator<=(const Envelope &rhs) const {
-        return w < rhs.w && h < rhs.h;
-    }
-
-    bool operator>(const Envelope &rhs) const {
-        return w < rhs.w && h < rhs.h;
-    }
-
-    bool operator>=(const Envelope &rhs) const {
-        return w < rhs.w && h < rhs.h;
-    }
-};
-
-int main() {
-    Envelope xx[300];
-    int ans = slis<Envelope>::work(xx, 300);
-}
-
-namespace lis {
-    static long d[MAXN]; // d[i]: value of tail of lis of size (i+1)
-    // d is always sorted, this is because:
-    // 1. if there are multiple lis of length t, the updating policy guarantees d[t] is the value of smallest tail
-    // 2. Assume p>q but d[p] < d[q], in that implicit lis of size p, there must contain a lis of size q whose tail is smaller than
-    //      d[q] (since lis is ascending). But by our updating policy, this couldn't happened.
-
-    static const int *a;
-
-    template<typename T>
-    static int lis(const int *const _a, const int n) {
-        a = _a;
-        memset(d, 0x1f, n * sizeof(*d)); // some gigantic value that int cannot reach
-        const long guard = d[0];
-        for (int i = 0; i < n; ++i) {
-            *std::lower_bound(d, d + n, a[i]) = a[i];
-            // all the benefits of not worrying about duplicate d element and keep elems in d as small as possible
-            // comes from lower_bound ...
-            // DO NOT USE UPPER BOUND! UPPER BOUND + SAFE CHECK IS SILLY!
-        }
-        int ans = 0;
-        while (d[ans++] != guard);
-        return ans;
-    }
-}
 
 namespace lis_bt {
 
@@ -102,17 +49,3 @@ namespace lis_bt {
 namespace lnds { // longest non-decreasing subsequence
 
 }
-
-
-// test: https://leetcode.com/problems/longest-increasing-subsequence/
-
-#include <vector>
-
-using std::vector;
-
-class Solution {
-public:
-    int lengthOfLIS(vector<int> &nums) {
-        return lis(nums)
-    }
-};
