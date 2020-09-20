@@ -2,11 +2,11 @@
 
 #include <vector>
 
-#include "disjoint-set.cc"
+#include "../ds/disjoint-set.cc"
 
 // unit test: http://acm.hdu.edu.cn/showproblem.php?pid=1233
 
-#include "util.cc"
+#include "../util.cc"
 
 #include <cstdint>
 #include <queue>

@@ -36,3 +36,9 @@ For a generic lis algorithm, store the index.
     want the search range to be small so that the times of indirecting a index
     into the array a is minimized.
     (i.e. can't be lower_bound on the whole [0,n) now.)
+
+Longest non-decreasing sequence
+========================
+Two options:
+1. For type you have control, define < in a way that means <= (todo:test)
+2. For primitive types, change lower_bound to upper_bound (todo: test)

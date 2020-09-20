@@ -3,4 +3,3 @@ cmake-build-debug/
 *.out
 CMakeLists.txt
 dist/
-misc/

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "bitmagic.cc"
+#include "../misc/bitmagic.cc"
 
 // preprocess O( n log(n) ), query O(1)
 struct rmq_sparse_table {
