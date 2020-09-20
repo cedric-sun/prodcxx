@@ -1,9 +1,9 @@
-// cesun, 9/13/20 2:44 AM.
+// cesun, 9/19/20 9:25 PM.
 
-#include <cstring>
-#include <algorithm>
-
-#define MAXN 10005
+/*
+ * template lis
+ * Need < to be defined.
+ */
 
 template<typename T>
 struct lis {
@@ -24,28 +24,22 @@ struct lis {
         d[0] = 0; // init: lis of size 1 end at a[0]
         int dsz = 1;
         for (int i = 1; i < n; ++i) {
-            if (a[i] <= a[d[0]])
-                d[0] = i;
-            else if (a[i] > a[d[dsz - 1]])
-                d[dsz++] = i;
-            else if (a[i] == a[d[dsz - 1]])
-                d[dsz - 1] = i;
-            else
-                d[lower_bound(a, d, dsz, a[i])] = i;
-            // or simplified version:
-//            int j = lower_bound(a, d, dsz, a[i]);
-//            if (j == dsz) dsz++;
-//            d[j] = i;
+            int j = lower_bound(a, d, dsz, a[i]);
+            if (j == dsz) dsz++;
+            d[j] = i;
         }
         delete[] d;
         return dsz;
     }
 };
 
-namespace lis_bt {
-
-}
-
-namespace lnds { // longest non-decreasing subsequence
-
-}
+//test: https://leetcode.com/problems/longest-increasing-subsequence/
+#include <vector>
+using std::vector;
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        return lis<int>::work(nums.data(), nums.size());
+    }
+};
