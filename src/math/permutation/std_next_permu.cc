@@ -2,7 +2,8 @@
 
 /*
  * next_permutation implementation from c++ std library
- * reason not to use binary search: https://stackoverflow.com/a/17212740/8311608
+ * For long sequence, can use binary search:
+ * https://stackoverflow.com/a/17212740/8311608
  *
  *      i   i1          i2
  * 10   5   9   8   7   6   4   3   2   1
