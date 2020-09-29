@@ -23,9 +23,10 @@ bool knapsack() {
     for (int i = 0; i < item_n; ++i) {
         const int &x = items[i];
         const int lbi = std::max(lb[i], x);
-        for (int j = capacity; j >= lbi; --j) {
+        if (capacity >= x && dp[capacity - x]) return true;
+        for (int j = capacity - 1; j >= lbi; --j) {
             if (dp[j - x]) dp[j] = true;
         }
     }
-    return dp[capacity];
+    return false;
 }

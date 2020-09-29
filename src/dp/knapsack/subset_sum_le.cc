@@ -21,7 +21,11 @@ int knapsack() {
     for (int i = 0; i < item_n; ++i) {
         const int &x = items[i];
         const int lbi = std::max(lb[i], x);
-        for (int j = capacity; j >= lbi; --j) {
+        if (capacity >= x) {
+            dp[capacity] = std::max(dp[capacity], x + dp[capacity - x]);
+            if (dp[capacity] == capacity) return capacity; // a further optimization
+        }
+        for (int j = capacity - 1; j >= lbi; --j) {
             dp[j] = std::max(dp[j], x + dp[j - x]);
         }
     }
