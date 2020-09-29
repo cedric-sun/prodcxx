@@ -2,22 +2,32 @@
 #include <algorithm>
 #include <cstdio>
 
-template<int D0, int D1>
-void print_2darr(const int (&arr)[D0][D1]) {
-    static char buf[25600];
+static char buf[25600];
+
+template<int D>
+void print_arr(const int idx, const int (&arr)[D]) {
+    char *cur = buf;
+    cur += sprintf(cur, "%2d: ", idx);
+    for (const int e : arr) {
+        cur += sprintf(cur, "%4d", e);
+    }
+    puts(buf);
+}
+
+void print_header(const int n) {
     char *cur = buf;
     cur += sprintf(cur, "idx:");
-    for (int i = 0; i < D1; ++i) {
+    for (int i = 0; i < n; ++i) {
         cur += sprintf(cur, "%4d", i);
     }
     puts(buf);
+}
+
+template<int D0, int D1>
+void print_2darr(const int (&arr)[D0][D1]) {
+    print_header(D1);
     for (int i = 0; i < D0; ++i) {
-        cur = buf;
-        cur += sprintf(cur, "%2d: ", i);
-        for (const int e : arr[i]) {
-            cur += sprintf(cur, "%4d", e);
-        }
-        puts(buf);
+        print_arr(i, arr[i]);
     }
     putchar('\n');
 }
@@ -48,21 +58,6 @@ void print_2darr(const int (&arr)[D0][D1]) {
 // - Consider only the first 2 integer, for knapsacks of capacity 7 to 9, the max payload is 7 (attained by put that 7 into knapsack)
 // - Consider only the first 3 integer, for knapsacks of capacity 7 to 9, the max payload is 7 (same)
 
-//closest_subset_sum_proto0<3, 14>({7, 10, 4})
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-// 2:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-//
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   7   7   7  10  10  10  10  10
-// 2:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-//
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   7   7   7  10  10  10  10  10
-// 2:    0   0   0   0   4   4   4   7   7   7  10  11  11  11  14
 template<int K, int MAXN>
 int closest_subset_sum_proto0(const int (&arr)[K]) {
     // the answer is dp[K-1][MAXN] so you want the second dimension to have size MAXN+1
@@ -85,29 +80,9 @@ int closest_subset_sum_proto0(const int (&arr)[K]) {
     return dp[K - 1][MAXN];
 }
 
-// An improved implementation. We eliminate that condition check by directly start j from arr[i].
-// Now the content of `dp[][]` does not strictly follow its definition anymore. Notice how `dp[1][7-9]`
-// is 0. Apparently this is not the case, since as demonstrated above, knapsacks of capacity 7 to 9 can
-// for sure contain that integer 7. Let's prove this is still a correct algorithm.
-
-//closest_subset_sum_proto1<3, 14>({7, 10, 4})
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-// 2:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-//
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   0   0   0  10  10  10  10  10
-// 2:    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
-//
-//idx:   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-// 0:    0   0   0   0   0   0   0   7   7   7   7   7   7   7   7
-// 1:    0   0   0   0   0   0   0   0   0   0  10  10  10  10  10
-// 2:    0   0   0   0   4   4   4   4   4   4  10  10  10  10  14
+// An BUGGY implementation: https://github.com/tianyicui/pack/issues/4
 template<int K, int MAXN>
-int closest_subset_sum_proto1(const int (&arr)[K]) {
-    // dp[i][j]: when only the first i integers are considered, the max weight attainable for the knapsack of size j
+int BUG_closest_subset_sum_proto1(const int (&arr)[K]) {
     // the answer is dp[K-1][MAXN] so you want the second dimension to have size MAXN+1
     static int dp[K][MAXN + 1];
     // initialize dp[0][]
@@ -117,7 +92,7 @@ int closest_subset_sum_proto1(const int (&arr)[K]) {
     // dp[0][]: 0,0,0,0,....,0, arr[0], arr[0], ..., arr[0].
     print_2darr(dp);
     for (int i = 1; i < K; ++i) {
-        for (int j = arr[i]; j <= MAXN; ++j) {
+        for (int j = arr[i]; j <= MAXN; ++j) { // ignoring j<arr[i] incurring terrible bug.
             dp[i][j] = std::max(dp[i - 1][j], arr[i] + dp[i - 1][j - arr[i]]);
         }
         print_2darr(dp);
@@ -125,11 +100,56 @@ int closest_subset_sum_proto1(const int (&arr)[K]) {
     return dp[K - 1][MAXN];
 }
 
+// A space optimization and everything sweetly work together:
+// 1. the initialization step is naturally combined into the major loop
+// 2. The attempt to eliminate the `j < arr[i]` check in the previous buggy implementation
+//      incurs bug, since we always need to copy dp[i - 1][j] to dp[i][j] when `j < arr[i]`.
+//      But with the space optimization, we are now working on the same array, and due to
+//      the order of iteration, what we need to copy previously now just naturally sit in their place.
+template<int K, int MAXN>
+int closest_subset_sum(const int (&arr)[K]) {
+    // the answer is dp[K-1][MAXN] so you want the second dimension to have size MAXN+1
+    static int dp[MAXN + 1];
+    print_header(MAXN + 1);
+    int i = 0;
+    for (int x : arr) {
+        for (int j = MAXN; j >= x; --j) {
+            dp[j] = std::max(dp[j], x + dp[j - x]);
+        }
+        print_arr(i++, dp);
+    }
+    return dp[MAXN];
+}
+
+// A constant factor optimization by only compute the necessary triangle on the 2D array
+template<int K, int MAXN>
+int closest_subset_sum_opt(const int (&arr)[K]) {
+    // the answer is dp[K-1][MAXN] so you want the second dimension to have size MAXN+1
+    static int dp[MAXN + 1]; // 0 init required if this function is called more than once.
+    // precompute lb[i]= MAXN- \sum_{i+1}^{N}
+    static int lb[K];
+    lb[K - 1] = MAXN;
+    for (int i = K - 2; i >= 0; --i) {
+        lb[i] = lb[i + 1] - arr[i + 1];
+    }
+    print_header(MAXN + 1);
+    for (int i = 0; i < K; ++i) {
+        const int &x = arr[i];
+        const int lbi = std::max(lb[i], x);
+        for (int j = MAXN; j >= lbi; --j) {
+            dp[j] = std::max(dp[j], x + dp[j - x]);
+        }
+        print_arr(i, dp);
+    }
+    return dp[MAXN];
+}
 
 int main() {
-    puts("closest_subset_sum_proto0<3, 14>({7, 10, 4})");
-    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 4}));
-
-//    puts("closest_subset_sum_proto1<3, 14>({7, 10, 5})");
-//    printf("ans=%d\n", closest_subset_sum_proto1<3, 14>({7, 10, 5}));
+    puts("-----------------------------------------");
+    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 5}));
+//    printf("ans=%d\n", BUG_closest_subset_sum_proto1<3, 14>({7, 10, 5}));
+    puts("-----------------------------------------");
+    printf("ans=%d\n", closest_subset_sum<3, 14>({7, 10, 5}));
+    puts("-----------------------------------------");
+    printf("ans=%d\n", closest_subset_sum_opt<3, 14>({7, 10, 5}));
 }
