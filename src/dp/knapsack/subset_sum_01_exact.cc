@@ -23,7 +23,7 @@ bool knapsack() {
     for (int i = 0; i < item_n; ++i) {
         const int &x = items[i];
         const int lbi = std::max(lb[i], x);
-        if (capacity >= x && dp[capacity - x]) return true;
+        if (capacity >= x && dp[capacity - x]) return true; // a further optimization but only work for subset sum knapsack
         for (int j = capacity - 1; j >= lbi; --j) {
             if (dp[j - x]) dp[j] = true;
         }

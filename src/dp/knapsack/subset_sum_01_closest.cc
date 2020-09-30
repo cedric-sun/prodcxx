@@ -23,7 +23,7 @@ int knapsack() {
         const int lbi = std::max(lb[i], x);
         if (capacity >= x) {
             dp[capacity] = std::max(dp[capacity], x + dp[capacity - x]);
-            if (dp[capacity] == capacity) return capacity; // a further optimization
+            if (dp[capacity] == capacity) return capacity; // a further optimization but only work for subset sum knapsack
         }
         for (int j = capacity - 1; j >= lbi; --j) {
             dp[j] = std::max(dp[j], x + dp[j - x]);

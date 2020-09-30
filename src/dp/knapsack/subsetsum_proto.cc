@@ -144,12 +144,50 @@ int closest_subset_sum_opt(const int (&arr)[K]) {
     return dp[MAXN];
 }
 
+namespace unbounded_subset_sum {
+    template<int K, int MAXN>
+    int work(const int (&arr)[K]) {
+        static int dp[K][MAXN + 1];
+        // memset dp to 0 if invoked multiple times ...
+        // there is no lb[] optimization now since dp[K - 1][MAXN] now depends on the whole 2d array
+        int (&dp0)[MAXN + 1] = dp[0];
+        for (int j = arr[0]; j <= MAXN; ++j) {
+            dp0[j] = dp0[j - arr[0]] + arr[0];
+        }
+        print_2darr(dp);
+        for (int i = 1; i < K; ++i) {
+            for (int j = arr[i]; j <= MAXN; ++j) {
+                dp[i][j] = std::max(dp[i - 1][j], dp[i][j - arr[i]] + arr[i]);
+            }
+            print_2darr(dp);
+        }
+        return dp[K - 1][MAXN];
+    }
+
+    template<int K, int MAXN>
+    int improve0(const int (&arr)[K]) {
+        static int dp[MAXN + 1];
+        // memset dp to 0 if invoked multiple times ...
+        // there is no lb[] optimization now since dp[K - 1][MAXN] now depends on the whole 2d array
+        print_header(MAXN + 1);
+        for (int i = 0; i < K; ++i) {
+            for (int j = arr[i]; j <= MAXN; ++j) {
+                dp[j] = std::max(dp[j], dp[j - arr[i]] + arr[i]);
+            }
+            print_arr(i, dp);
+        }
+        return dp[MAXN];
+    }
+}
+
 int main() {
-    puts("-----------------------------------------");
-    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 5}));
+//    puts("-----------------------------------------");
+//    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 5}));
 //    printf("ans=%d\n", BUG_closest_subset_sum_proto1<3, 14>({7, 10, 5}));
-    puts("-----------------------------------------");
-    printf("ans=%d\n", closest_subset_sum<3, 14>({7, 10, 5}));
-    puts("-----------------------------------------");
-    printf("ans=%d\n", closest_subset_sum_opt<3, 14>({7, 10, 5}));
+//    puts("-----------------------------------------");
+//    printf("ans=%d\n", closest_subset_sum<3, 14>({7, 10, 5}));
+//    puts("-----------------------------------------");
+//    printf("ans=%d\n", closest_subset_sum_opt<3, 14>({7, 10, 5}));
+//    printf("ans=%d\n", unbounded_subset_sum::work<3, 14>({7, 10, 5}));
+    printf("ans=%d\n", unbounded_subset_sum::improve0<3, 14>({7, 10, 5}));
 }
