@@ -3,6 +3,8 @@
 /*
  * template lis
  * Need < to be defined.
+ *
+ * d is not sorted, a[d[]] is sorted (strict increasing);
  */
 
 template<typename T>

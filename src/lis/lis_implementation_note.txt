@@ -8,7 +8,7 @@ https://cp-algorithms.com/sequences/longest_increasing_subsequence.html
                                                           ^
                                                notice this possible equality here
     the possibility of equality is problematic, you may now having duplicated
-    element in d;
+    element in d, which violates the (strictly) increasing property.
 
     lower_bound guarantees:     d[j] >= a[i]  and  d[j-1] < a[i]
                                                           ^

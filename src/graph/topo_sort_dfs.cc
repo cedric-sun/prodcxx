@@ -32,14 +32,15 @@ void topo_dfs(int u) {
 }
 
 int main() {
-    // clean up before each test case
+    // ---------- clean up before each test case ----------
     int n = 123345; // the number of vertexes indexed [0,n-1]
     has_ring = false;
     for (int i = 0; i < numCourses; ++i) {
         G[i].clear();
     }
     memset(vis, UNVISITED, sizeof(vis));
-    // ---------- build G from edge set if necessary -------------
+    // topo.reserve(n);
+    // ---------- build G from edge set if necessary ----------
     for (int u = 0; u < n; u++) {
         if (vis[u] == UNVISITED) {
             topo_dfs(u);
