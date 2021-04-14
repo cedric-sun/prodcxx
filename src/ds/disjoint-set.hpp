@@ -20,11 +20,12 @@ static int ds_find(int x) {
         stack[top++] = x;
         x = ds[x];
     }
-    while (top) ds[stack[--top]] = x;
+    while (top)
+        ds[stack[--top]] = x;
     return x;
 }
 
-//PRECONDITION: a = find(x); b=find(y); a != b
+// PRECONDITION: a = find(x); b=find(y); a != b
 static void ds_join_leader(const int a, const int b) {
     if (ds[a] <= ds[b]) {
         ds[a] += ds[b];
