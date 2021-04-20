@@ -1,3 +1,6 @@
+// Both dijkstra SSSP and prim's MST share a nice property: if implemented using a adjacency matrix, the
+// complexity is irrelevant to the # of edges |E|; meaning that, on dense graph, matrix implementation performs better
+// than adj list.
 // hdu2066
 #include <bits/stdc++.h>
 
@@ -22,6 +25,7 @@ int main() {
             if (G[u][v] > w)
                 G[u][v] = G[v][u] = w;//坑点所在：会有重复的边
         }
+        // no need to set diagonal 0
         vector<int> ss(sn), dd(dn);
         for (int &s :ss)
             cin >> s;

@@ -1,11 +1,12 @@
 /**
  * LIS O(n^2) Solution.
  *
- * We are interesting in this version because it represents a general dp technique that
- * can solve problems O(n logn) version can't solve.
+ * We are interesting in this version because it represents a general dp
+ * technique that can solve problems O(n logn) version can't solve.
  *
- * The dp[] array, instead of storing the length of LIS that ends at a[i] (which is init-ed to 1 and
- * potentially increase by 1 each time we inspect a new element), can represent "weight" as well.
+ * The dp[] array, instead of storing the length of LIS that ends at a[i] (which
+ * is init-ed to 1 and potentially increase by 1 each time we inspect a new
+ * element), can represent "weight" as well.
  */
 
 #include <bits/stdc++.h>
@@ -29,12 +30,11 @@ int lis_length(vector<int> &a) {
     return ans;
 }
 
-
 // lc 354
 class Solution {
 public:
     int maxEnvelopes(vector<vector<int>> &envs) {
-        sort (envs.begin(), envs.end(), [](const auto &a, const auto &b) {
+        sort(envs.begin(), envs.end(), [](const auto &a, const auto &b) {
             return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
         });
         vector<int> second_dim;

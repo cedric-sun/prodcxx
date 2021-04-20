@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// inversion is a measure over a sequence describing "how far this sequence is from its sorted version".
 int ninv2;
 
 // precond: data[l,m) sorted && data[m,r) sorted
