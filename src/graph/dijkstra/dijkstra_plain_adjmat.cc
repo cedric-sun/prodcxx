@@ -1,6 +1,10 @@
-// Both dijkstra SSSP and prim's MST share a nice property: if implemented using a adjacency matrix, the
-// complexity is irrelevant to the # of edges |E|; meaning that, on dense graph, matrix implementation performs better
-// than adj list.
+// Both dijkstra SSSP and prim's MST share a nice property: if implemented using
+// a adjacency matrix, the complexity is irrelevant to the # of edges |E|;
+// meaning that, on dense graph, matrix implementation performs better than adj
+// list.
+//
+// Note that both done[] and dist[] array are necessary in such implementation.
+//
 // hdu2066
 #include <bits/stdc++.h>
 
@@ -23,11 +27,11 @@ int main() {
             int u, v, w;
             cin >> u >> v >> w;
             if (G[u][v] > w)
-                G[u][v] = G[v][u] = w;//坑点所在：会有重复的边
+                G[u][v] = G[v][u] = w; //坑点所在：会有重复的边
         }
         // no need to set diagonal 0
         vector<int> ss(sn), dd(dn);
-        for (int &s :ss)
+        for (int &s : ss)
             cin >> s;
         for (int &d : dd)
             cin >> d;
@@ -44,15 +48,18 @@ int main() {
                     //      `dist[i] != MAX` IS EXTREMELY IMPORTANT
                     //
                     //      WITHOUT IT, THE RUN TIME DROP FROM 62 ms TO 500 ms
-                    //      AND THE PROGRAM IS VULNERABLE TO ARITHMETIC OVERFLOW!
+                    //      AND THE PROGRAM IS VULNERABLE TO ARITHMETIC
+                    //      OVERFLOW!
                     // =========================================================
-                    if (!done[i] && dist[i] != MAX && (u == -1 || dist[i] < dist[u])) {
+                    if (!done[i] && dist[i] != MAX &&
+                        (u == -1 || dist[i] < dist[u])) {
                         u = i;
                     }
                 }
                 if (u == -1)
                     break;
-                // now we've ensured u is accessible from s, so the following addition can't overflow
+                // now we've ensured u is accessible from s, so the following
+                // addition can't overflow
                 done[u] = true;
                 for (int v = 1; v <= 1000; v++) {
                     if (done[v] || G[u][v] == MAX)
