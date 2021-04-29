@@ -8,7 +8,7 @@ using namespace std;
 // it's finding the (n+1)-th smallest element
 
 // This implementation does the same except off-by-one,
-// i.e. find the k smallest elements
+// i.e. find the k smallest elements, result in a[0,k)
 // after return, a[k-1] be the exact n-th smallest element, with
 // a[l,k) be smaller than a[k]
 // [l,r]

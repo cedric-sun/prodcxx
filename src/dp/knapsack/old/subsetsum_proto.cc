@@ -182,10 +182,10 @@ namespace unbounded_subset_sum {
 
 int main() {
 //    puts("-----------------------------------------");
-//    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 5}));
+    printf("ans=%d\n", closest_subset_sum_proto0<3, 14>({7, 10, 5}));
 //    printf("ans=%d\n", BUG_closest_subset_sum_proto1<3, 14>({7, 10, 5}));
 //    puts("-----------------------------------------");
-//    printf("ans=%d\n", closest_subset_sum<3, 14>({7, 10, 5}));
+    printf("ans=%d\n", closest_subset_sum<3, 14>({7, 10, 5}));
 //    puts("-----------------------------------------");
 //    printf("ans=%d\n", closest_subset_sum_opt<3, 14>({7, 10, 5}));
 //    printf("ans=%d\n", unbounded_subset_sum::work<3, 14>({7, 10, 5}));
