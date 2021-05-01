@@ -20,11 +20,12 @@ int lcs_length_prototype(const string &a, const string &b) {
     return dp[a.size()][b.size()];
 }
 
+// If we need to reconstruct the lcs, this space optimization can't be used.
 constexpr int MAX_B_SZ = 1000;
 static int dp[2][MAX_B_SZ + 1];
 
 int lcs_length_optimized(const string &a, const string &b) {
-    memset(dp, 0, sizeof dp);
+    memset(dp, 0, sizeof dp); // memset(dp[1],0,sizeof dp[1]) is enough
     int curi, previ;
     for (int i = 0; i < a.size(); i++) {
         curi = i & 1, previ = curi ^ 1;

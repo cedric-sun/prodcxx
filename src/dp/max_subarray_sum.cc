@@ -8,6 +8,8 @@ using namespace std;
 // We are willing to take the punishment caused by putting -1 into the sum,
 // because this allows us to make a longer subarray with larger sum.
 // But when the negative value is too large, e.g. [5,4,-90,7,8], we need to be smart enough to not include -90.
+// 
+// For a variant on tree, see lc124
 
 int max_subarray_sum_prototype(vector<int> &a) {
     vector<int> dp(a.size()); // dp[i]: the max sum of subarray that end exactly at a[i] (must include a[i])

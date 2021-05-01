@@ -1,3 +1,6 @@
+// subset sum problem is knapsack but weight is always quantitatively identical to cost for each item;
+// This type of specialization of knapsack exhibits some interesting properties.
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -47,6 +50,29 @@ namespace recursive {
         return ss_crazy(items, dp, items.size() - 1, cap);
     }
 }
+
+// Rationale: for bitset c[0] = true; for each value in items, we keep c |= (c<<n);
+// crop the bitset to the least significant bits [cap,0], find the most significant 1
+// (can be done using CLZ instruction or alike; GCC bulit-in:
+// https://stackoverflow.com/a/673781/8311608
+int subset_sum_01_closest_crazier_bitmagic(const vector<int> &items, int cap) {
+    //TODO: CLZ on std::bitset
+}
+
+bool exact_subset_sum_01_attainability(const vector<int> &items, const int target) {
+    // max possible sum of all items, since we will be left shifting the first bit
+    // sum(items) times
+    constexpr int MAXN = 20010;
+    auto c = bitset<MAXN>();
+    c[0] = true;
+    for (auto n : items) {
+        c |= (c << n);
+        if (c[target])
+            return true;
+    }
+    return false;
+}
+
 
 int main() {
     vector<int> data = {7, 10, 5};
