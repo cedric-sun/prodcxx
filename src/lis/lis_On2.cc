@@ -20,8 +20,8 @@ int lis_length(vector<int> &a) {
             if (a[i] > a[j]) {
                 dp[i] = max(dp[i], dp[j] + 1);
             }
-            // dp[i] settled permanently
         }
+        // dp[i] settled permanently
     }
     int ans = 0;
     for (int i = 0; i < a.size(); ++i) {
