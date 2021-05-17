@@ -47,10 +47,10 @@ private:
         }
         const int m = l + (r - l) / 2;
         // left half is [l,m], right half is [m+1,r]
-        if (i > m)
-            seg_update(root * 2 + 2, m + 1, r, i, val); // goes right
-        else
+        if (i <= m)
             seg_update(root * 2 + 1, l, m, i, val); // goes left
+        else
+            seg_update(root * 2 + 2, m + 1, r, i, val); // goes right
         // update all ancestors, e.g. sum
         seg[root] = seg[root * 2 + 1] + seg[root * 2 + 2];
     }
@@ -72,3 +72,28 @@ public:
         seg_update(0, 0, n - 1, i, val);
     }
 };
+
+
+//  ================ unit test
+class NumArray {
+public:
+    seg_tree a;
+    NumArray(vector<int>& nums):a{nums} {
+
+    }
+
+    void update(int index, int val) {
+        a.update(index, val);
+    }
+
+    int sumRange(int left, int right) {
+        return a.query(left, right);
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * obj->update(index,val);
+ * int param_2 = obj->sumRange(left,right);
+ */

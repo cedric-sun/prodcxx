@@ -10,7 +10,7 @@ using namespace std;
 // a lazy segment tree is a segment tree that support efficient range-based update.
 // TODO: verify correctness
 
-class seg_tree_lazy {
+class seg_tree_lazy_delta {
 private:
     const int n;
     vector<int> seg;
@@ -45,7 +45,7 @@ private:
         // Thus we must push down any laziness at the current root.
         const int m = l + (r - l) / 2;
         if (lazy[root] != 0 && l != r) { // if current node has lazy, and its not leaf
-            seg[root] += lazy[root] * (r - l + 1);
+//            seg[root] += lazy[root] * (r - l + 1);
             lazy[root * 2 + 1] += lazy[root];
             lazy[root * 2 + 2] += lazy[root];
             lazy[root] = 0;
@@ -57,8 +57,12 @@ private:
         seg[root] = seg[root * 2 + 1] + seg[root * 2 + 2];
     }
 
+    void seg_query(const int root, const int l, const int r, const int i, const int j) {
+
+    }
+
 public:
-    seg_tree_lazy(const vector<int> &data) : n{(int) data.size()} {
+    seg_tree_lazy_delta(const vector<int> &data) : n{(int) data.size()} {
         seg.resize(4 * n);
         lazy.reserve(4 * n);
         seg_build(0, 0, n - 1, data);
