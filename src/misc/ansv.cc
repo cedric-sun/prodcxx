@@ -20,7 +20,7 @@ namespace jump_path_compression_ansv { // Jump Path Compression base ANSV.
 
 // return P[x.size()] such that x[P[i]] < x[i], and i-P[i] is minimal
 // If no such P[i] exists, P[i] is -1
-vector<int> ansv(const vector<int> &x) {
+vector<int> left_nearest_smaller(const vector<int> &x) {
     vector<int> ans(x.size());
     for (int i = 0; i < x.size(); ++i) {
         int j = i - 1;
@@ -75,7 +75,7 @@ void test(const vector<int> &data) {
         printf("%4d", value);
     putchar('\n');
     fputs("idx:      ", stdout);
-    vector<int> idxes = ansv(data);
+    vector<int> idxes = left_nearest_smaller(data);
     vector<int> idxes2 = ansv_template(data.cbegin(), data.cend());
     if (idxes != idxes2) {
         puts("?");

@@ -1,6 +1,13 @@
 // cesun, 9/20/20 1:24 PM.
 
 /*
+ * Compute then next lexicographical larger permutation and return true,
+ * or return false when no next larger permutation can be found.
+ *
+ * We can start from a sorted list and keep calling this until this function
+ * return false, to generate  all permutation. But this is generally slower
+ * than dedicated algorithm that generate all permutation in non-lexical order.
+ *
  * next_permutation implementation from c++ std library
  * For long sequence, can use binary search:
  * https://stackoverflow.com/a/17212740/8311608
