@@ -80,13 +80,13 @@ namespace subset_sum_01_inexact_max_bool {
 // only use a visited[] bool array.
 //
 // Feels like the done[] version of dijkstra.
-int work(const vector<int> &items, cap) {
+int work(const vector<int> &items, const int cap) {
     vector<bool> dp(cap + 1, false);
     dp[0] = true;
     int ans = 0;
-    for (int i = 0; i < stones.size(); i++) {
-        for (int j = cap; j >= items[i]; j--) {
-            if (dp[j - items[i]]) {
+    for (int item : items) {
+        for (int j = cap; j >= item; j--) {
+            if (dp[j - item]) {
                 dp[j] = true;
                 ans = max(ans, j);
             }

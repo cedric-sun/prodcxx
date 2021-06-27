@@ -7,15 +7,18 @@ using namespace std;
 // leftmost/rightmost element that is smaller(or equal)/greater(or equal) than
 // a[i];
 
+// leftmost/rightmost: prefix/suffix
+// smaller/larger: min/max
+// strict/non-strict: exclusive/inclusive rolling
 namespace when_values_in_a_is_small {
 // when all a[i] are in a reasonable range say a[i] <= 30000,
-// we can compute the afsv problem in O(n) using the thought similar
+// we can compute the afsv problem in O(n) using thought similar
 // to a counting sort.
 //
 // Variants:
-//      For rightmost, we can use suffix max.
-//      For smaller equal, we can use prefix min;
-//      For strictly larger situation, we can do exclusive rolling suffix min
+//      leftmost/rightmost: min/max
+//      smaller_eq / larger_eq: prefix/suffix
+//      strict / non-strict: inclusive / exclusive rolling
 vector<int> leftmost_larger_equal(const vector<int> &a) {
     int max_ai = INT_MIN;
     for (int e : a)
@@ -27,7 +30,7 @@ vector<int> leftmost_larger_equal(const vector<int> &a) {
         // thus we do a backward scan
         leftmost[a[i]] = i;
     }
-    // we want find the leftmost j (i.e. smallest i) such that a[j]>a[i].
+    // we want find the leftmost j (i.e. smallest i) such that a[j]>=a[i].
     // This can be done by finding the minimum value in leftmost[a[i],max_ai]
     // i.e. query the minimum of a suffix of leftmost[].
     // We can do a rolling min and answer each query in O(1);
@@ -36,7 +39,8 @@ vector<int> leftmost_larger_equal(const vector<int> &a) {
         leftmost[i] = min(leftmost[i], leftmost[i + 1]);
     }
     // index of the leftmost element that is larger than or equal to a[i] is
-    // leftmost[a[i]]; (when a[i] is largest element we find itself)
+    // leftmost[a[i]]; (when all elements to the left of a[i] is smaller, we
+    // find a[i] itself)
     vector<int> ans(a.size());
     for (int i = 0; i < a.size(); ++i)
         ans[i] = leftmost[a[i]];
@@ -49,6 +53,11 @@ namespace compare_based {
 // if the range of values in a[] is INT_MIN to INT_MAX,
 // we can't allocate an array that large. Instead we use binary search
 // on the array.
+//
+// Variants:
+//      leftmost/rightmost: prefix/suffix
+//      smaller_eq/larger_eq: min/max
+//      non-strict: inclusive/exclusive rolling
 vector<int> leftmost_larger_equal(const vector<int> &a) {
     const int n = a.size();
     vector<int> pfx_max(n); // inclusive suffix min
@@ -75,6 +84,7 @@ void test(const vector<int> &a) {
     //    cout << e << ' ';
     //cout << endl;
 }
+
 int main() {
     constexpr int MAXN = 100000;
     default_random_engine rng(random_device{}());

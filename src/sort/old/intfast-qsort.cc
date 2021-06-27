@@ -16,7 +16,7 @@ namespace iqsort {
 
     // [l,r)
     static inline void insertion_sort(int l, int r) {
-        // TODO: use linear search instead... binary search is overkill for 16 elements
+        // TODO: use linear search instead... binary search is overkill for 16 elements; and its O(n) for each memmove anyway
         for (int i = l + 1; i < r; ++i) {
             // [l,i) is sorted
             const int x = arrr[i];

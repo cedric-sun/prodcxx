@@ -3,6 +3,9 @@
 using namespace std;
 
 // 1-based fenwick tree for prefix sum
+//
+// TODO: init fenwick in O(n)
+// https://oi-wiki.org/ds/fenwick/#tricks
 
 int n; // # of elements in data[]
 vector<int> fenwick; // 1-based  [1,n]
